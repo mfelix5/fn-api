@@ -1,7 +1,6 @@
 const fs = require("fs");
 const csv = require("fast-csv");
 const moment = require("moment");
-const _ = require("lodash");
 
 const readCSV = (file) => new Promise((resolve, reject) => {
   try {
