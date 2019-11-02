@@ -6,9 +6,9 @@ const router = new express.Router();
 
 router.post("/queries", async (req, res) => {
   try {
-    const query = new Query(req.body);
-    const recommendation = await getRecommendation(query);
-    query.recommendation = recommendation;
+    const initialQuery = req.body;
+    initialQuery.recommendation = await getRecommendation(initialQuery);
+    const query = new Query(initialQuery);
     await query.save();
     res.send(query);
   } catch (err) {

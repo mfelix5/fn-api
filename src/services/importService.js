@@ -1,6 +1,7 @@
 const fs = require("fs");
 const csv = require("fast-csv");
 const moment = require("moment");
+const FareTable = require("../models/fareTable");
 
 const readCSV = (file) => new Promise((resolve, reject) => {
   try {
@@ -17,42 +18,40 @@ const readCSV = (file) => new Promise((resolve, reject) => {
 });
 
 module.exports = {
-  importFareTable: async ({
-    system,
-    line,
-    effectiveDate,
-    file,
-  }) => {
+  importFareTable: async ({ system, line, effectiveDate, file }) => {
     try {
       const data = await readCSV(file);
-      const fareObjects = data.map((row) => (
-        {
+      const fareObjects = await Promise.all(data.map(async (row) => {
+        const obj = {
           current: true,
           effectiveDate: moment(effectiveDate, "MM/DD/YYYY"),
           line,
           station: row[0],
           system,
-          NYP: {
-            "one-way": row[1],
-            "one-way-reduced": row[2],
-            weekly: row[3],
-            monthly: row[4],
-            "10-trip": row[5],
+          fares: {
+            NYP: {
+              "one-way": row[1],
+              "one-way-reduced": row[2],
+              weekly: row[3],
+              monthly: row[4],
+              "10-trip": row[5],
+            },
+            SEC: {
+              "one-way": row[6],
+              "one-way-reduced": row[7],
+              weekly: row[8],
+              monthly: row[9],
+              "10-trip": row[10],
+            },
           },
-          SEC: {
-            "one-way": row[6],
-            "one-way-reduced": row[7],
-            weekly: row[8],
-            monthly: row[9],
-            "10-trip": row[10],
-          },
-        }
-      ));
-      // save to database
+        };
+        const fareTable = new FareTable(obj);
+        return fareTable.save();
+      }));
+
       return fareObjects;
     } catch (err) {
       console.log("Error from importFareTable():", err);
     }
   },
-
 };

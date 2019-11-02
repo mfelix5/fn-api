@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 // const validator = require("validator");
 // const { fareTypes } = require("../models/constants");
 
-const Query = mongoose.model("Query", {
+const QuerySchema = new mongoose.Schema({
   destination: { type: String, required: true },
   fareType: { type: String, enum: ["senior", "student", "regular", "disability"], default: "regular", required: true },
   month: { type: Date, required: true },
@@ -33,6 +33,9 @@ const Query = mongoose.model("Query", {
     queryId: { type: String, required: true },
   },
   userId: { required: true, type: String },
+}, {
+  timestamps: true,
 });
 
+const Query = mongoose.model("Query", QuerySchema);
 module.exports = Query;

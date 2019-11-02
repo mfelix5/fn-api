@@ -1,13 +1,10 @@
 const express = require("express");
-const fs = require("fs");
 const multer = require('multer');
 const _ = require("lodash");
-
 const importService = require("../services/importService");
 
 const upload = multer({ dest: 'tmp/csv/' });
 const router = new express.Router();
-
 
 router.post('/import', upload.single('file'), async (req, res) => {
   try {
