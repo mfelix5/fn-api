@@ -2,6 +2,7 @@ const express = require("express");
 require("./db/mongoose");
 const calendarRoutes = require("./routes/calendarRoutes");
 const importRoutes = require("./routes/importRoutes");
+const stationRoutes = require("./routes/stationRoutes");
 const queryRoutes = require("./routes/queryRoutes");
 
 try {
@@ -10,6 +11,7 @@ try {
   app.use(express.json());
   app.use(calendarRoutes);
   app.use(importRoutes);
+  app.use(stationRoutes);
   app.use(queryRoutes);
   app.listen(port, () => console.log(`Server running on port ${port}...`));
 } catch (err) {
