@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-// const validator = require("validator");
 // const { fareTypes } = require("../models/constants");
 
 const QuerySchema = new mongoose.Schema({
