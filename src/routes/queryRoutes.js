@@ -4,7 +4,7 @@ const { getRecommendation } = require("../services/recommendationService");
 
 const router = new express.Router();
 
-router.post("/queries", async (req, res) => {
+router.post("/query", async (req, res) => {
   try {
     const userQuery = req.body;
     const result = await getRecommendation(userQuery);

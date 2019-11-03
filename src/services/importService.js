@@ -1,7 +1,7 @@
 const fs = require("fs");
 const csv = require("fast-csv");
 const moment = require("moment");
-const FareTable = require("../models/fareTable");
+const Station = require("../models/station");
 
 const readCSV = (file) => new Promise((resolve, reject) => {
   try {
@@ -17,7 +17,7 @@ const readCSV = (file) => new Promise((resolve, reject) => {
   }
 });
 
-const importFareTable = async ({ system, line, effectiveDate, file }) => {
+const importStationsAndFares = async ({ system, line, effectiveDate, file }) => {
   try {
     if (!system || !line || !effectiveDate || !file) {
       throw new Error(`'system', 'line', 'effectiveDate' and 'file' are required.`);
@@ -48,8 +48,8 @@ const importFareTable = async ({ system, line, effectiveDate, file }) => {
           },
         },
       };
-      const fareTable = new FareTable(obj);
-      return fareTable.save();
+      const station = new Station(obj);
+      return station.save();
     }));
 
     return fareObjects;
@@ -59,5 +59,5 @@ const importFareTable = async ({ system, line, effectiveDate, file }) => {
 };
 
 module.exports = {
-  importFareTable,
+  importStationsAndFares,
 };

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const FareTableSchema = new mongoose.Schema({
+const StationSchema = new mongoose.Schema({
   current: { type: Boolean, required: true },
   effectiveDate: { type: Date, required: true },
   line: { type: String, required: true },
@@ -11,5 +11,5 @@ const FareTableSchema = new mongoose.Schema({
   timestamps: true,
 });
 
-const FareTable = mongoose.model("FareTable", FareTableSchema);
-module.exports = FareTable;
+const Station = mongoose.model("Station", StationSchema);
+module.exports = Station;

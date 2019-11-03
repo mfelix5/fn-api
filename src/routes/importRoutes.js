@@ -1,4 +1,5 @@
 const express = require("express");
+const _ = require("lodash");
 const multer = require('multer');
 const importService = require("../services/importService");
 
@@ -7,9 +8,10 @@ const router = new express.Router();
 
 router.post('/import', upload.single('file'), async (req, res) => {
   try {
-    const { system, line, effectiveDate, file } = req.query;
+    const { system, line, effectiveDate } = req.query;
+    const file = _.get(req, "file.path");
 
-    const result = await importService.importFareTable({
+    const result = await importService.importStationsAndFares({
       effectiveDate,
       file,
       line,
