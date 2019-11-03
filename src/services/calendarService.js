@@ -2,6 +2,8 @@ const moment = require('moment');
 
 const getCalendar = (month, year) => {
   try {
+    if (!month || !year) throw new Error(`'month' and 'year' are required.`);
+
     const monthIndex = moment().month(month).format("M") - 1;
     const firstOfMonth = moment([year, monthIndex]).utc();
     const lastOfMonth = moment(firstOfMonth).endOf('month').utc();
@@ -20,8 +22,8 @@ const getCalendar = (month, year) => {
       calendar.week6 = `${firstFriday.clone().add(29, "days")} - ${lastOfMonth}`;
     }
     return calendar;
-  } catch (err) {
-    console.log('err from getCalendar():', err);
+  } catch (error) {
+    return error;
   }
 };
 

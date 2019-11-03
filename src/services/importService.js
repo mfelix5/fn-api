@@ -19,6 +19,10 @@ const readCSV = (file) => new Promise((resolve, reject) => {
 
 const importFareTable = async ({ system, line, effectiveDate, file }) => {
   try {
+    if (!system || !line || !effectiveDate || !file) {
+      throw new Error(`'system', 'line', 'effectiveDate' and 'file' are required.`);
+    }
+
     const data = await readCSV(file);
     const fareObjects = await Promise.all(data.map(async (row) => {
       const obj = {
@@ -49,8 +53,8 @@ const importFareTable = async ({ system, line, effectiveDate, file }) => {
     }));
 
     return fareObjects;
-  } catch (err) {
-    console.log("Error from importFareTable():", err);
+  } catch (error) {
+    return error;
   }
 };
 

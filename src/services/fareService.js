@@ -1,6 +1,6 @@
 const getFares = async (fareObject) => {
   try {
-    const { origin, destination, system } = fareObject;
+    const { origin, destination, line, system } = fareObject;
 
     // get fares from database
 

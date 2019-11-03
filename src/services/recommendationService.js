@@ -1,13 +1,13 @@
-// const _ = require("lodash");
+const Query = require("../models/query");
 const fareService = require("../services/fareService");
 
-const getRecommendation = async (travelObject) => {
+const getRecommendation = async (travelData) => {
   try {
     ["origin", "destination", "system", "fareType", "month", "oneWaysNeeded"].forEach((field) => {
-      if (!travelObject[field]) throw new Error(`${field} is required.`);
+      if (!travelData[field]) throw new Error(`${field} is required.`);
     });
 
-    const { destination, fareType, oneWaysNeeded, onHand, origin, system } = travelObject;
+    const { destination, fareType, oneWaysNeeded, onHand, origin, system } = travelData;
 
     const recommendation = {
       purchase: {
@@ -89,9 +89,12 @@ const getRecommendation = async (travelObject) => {
 
     recommendation.purchase = purchase;
     recommendation.use = use;
-    return recommendation;
-  } catch (err) {
-    console.log(`Error from getRecommendation(): ${err}`);
+
+    const query = new Query({ ...travelData, recommendation });
+    await query.save();
+    return query;
+  } catch (error) {
+    return error;
   }
 };
 
