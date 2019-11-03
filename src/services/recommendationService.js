@@ -1,13 +1,21 @@
 const Query = require("../models/query");
-const fareService = require("../services/fareService");
+const stationService = require("../services/stationService");
 
 const getRecommendation = async (travelData) => {
   try {
-    ["origin", "destination", "system", "fareType", "month", "oneWaysNeeded"].forEach((field) => {
+    ["origin", "destination", "line", "system", "fareType", "month", "oneWaysNeeded"].forEach((field) => {
       if (!travelData[field]) throw new Error(`${field} is required.`);
     });
 
-    const { destination, fareType, oneWaysNeeded, onHand, origin, system } = travelData;
+    const { destination, fareType, line, oneWaysNeeded, onHand, origin, system } = travelData;
+    const station = await stationService.findStation({ system, line, station: origin });
+    if (!station || !station.fares) throw new Error(`Unable to find station and fares.`);
+    // const fares = { station };
+    const fares = {
+      oneWay: 13,
+      weekly: 90,
+      monthly: 359,
+    };
 
     const recommendation = {
       purchase: {
@@ -17,10 +25,6 @@ const getRecommendation = async (travelData) => {
       },
       use: {},
     };
-
-    const fares = await fareService.getFares({
-      system, origin, destination, fareType,
-    });
 
     if (onHand) {
       const totalOneWaysNeeded = Object.values(oneWaysNeeded).reduce((a, b) => a + b);
