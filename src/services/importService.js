@@ -48,6 +48,16 @@ const importStationsAndFares = async ({ system, line, effectiveDate, file }) => 
           },
         },
       };
+
+      // if "current" station data alreay exists, change it to "current" false. TODO: incorporate effectiveDate into current logic
+      const existingStation = await Station.findOne({
+        line: obj.line,
+        system: obj.system,
+        station: obj.station,
+        current: true,
+      });
+      if (existingStation) await Station.findOneAndUpdate({ _id: existingStation._id }, { current: false });
+
       const station = new Station(obj);
       return station.save();
     }));

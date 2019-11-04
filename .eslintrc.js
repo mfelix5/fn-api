@@ -6,6 +6,7 @@ module.exports = {
     "max-len": [1, 120, 2, {ignoreComments: true}],
     "arrow-body-style": 0,
     "consistent-return": 0,
-    "object-curly-newline": 0
+    "object-curly-newline": 0,
+    "no-underscore-dangle": 0,
   }
 };
