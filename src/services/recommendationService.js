@@ -8,10 +8,11 @@ const getRecommendation = async (travelData) => {
     });
 
     const { destination, fareType, line, oneWaysNeeded, onHand, origin, system } = travelData;
-
     const station = await stationService.findStation(origin, line, system);
-    if (!station || !station.fares) throw new Error(`Unable to find station and fares.`);
     const { fares } = station;
+
+    if (!station || !fares) throw new Error(`Unable to find station and fares.`);
+
     const routeFares = fares[destination];
 
     const recommendation = {
