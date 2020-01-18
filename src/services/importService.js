@@ -39,7 +39,7 @@ const importStationsAndFares = async ({ system, line, effectiveDate, file }) => 
             monthly: row[4],
             "10-trip": row[5],
           },
-          SEC: {
+          HOB: {
             "one-way": row[6],
             "one-way-reduced": row[7],
             weekly: row[8],
