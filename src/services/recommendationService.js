@@ -86,7 +86,7 @@ const getRecommendation = async (travelData) => {
         use[week] = "monthly";
       });
       recommendation.totalCost = routeFares.monthly;
-      recommendation.message = "A monthly ticket is your best option.";
+      recommendation.message = "A monthly ticket is your least expensive option.";
     }
 
     recommendation.purchase = purchase;

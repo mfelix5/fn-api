@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-// const { fareTypes } = require("../models/constants");
 
 const QuerySchema = new mongoose.Schema({
   destination: { type: String, required: true },

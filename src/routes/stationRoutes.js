@@ -5,7 +5,7 @@ const router = new express.Router();
 
 router.get("/station", async (req, res) => {
   try {
-    const { station, line, system } = req.query;
+    const { line, station, system } = req.query;
     const result = await stationService.findStation(station, line, system);
     res.send(result);
   } catch (err) {
