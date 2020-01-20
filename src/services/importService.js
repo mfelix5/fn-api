@@ -17,7 +17,6 @@ const readCSV = (file) => new Promise((resolve, reject) => {
   }
 });
 
-// todo: update route and postman w/ less params
 const importStationsAndFares = async ({ system, file }) => {
   try {
     if (!system || !file) { throw new Error(`'system' and 'file' are required.`) }
@@ -30,25 +29,26 @@ const importStationsAndFares = async ({ system, file }) => {
 
     const destinationFareTypes = {};
     destinations.forEach(dest => {
-      destinationFareTypes[dest] = {}
+      destinationFareTypes[dest] = {};
       const startIndex = data[2].findIndex(el => el === dest);
       const nextDestinationIndex = data[2].findIndex(el => data[2].indexOf(el) > startIndex);
       const endIndex = nextDestinationIndex > -1 ? nextDestinationIndex : data[2].length;
       const fareTypes = data[3].slice(startIndex, endIndex);
-      destinationFareTypes[dest].startIndex = startIndex
-      fareTypes.forEach(type => destinationFareTypes[dest][type] = null)
+      destinationFareTypes[dest].startIndex = startIndex;
+      fareTypes.forEach(type => destinationFareTypes[dest][type] = null);
     });
 
     const fareObjects = await Promise.all(stationsAndFares.map(async (row) => {
+
       const fares = {...destinationFareTypes};
       Object.keys(fares).forEach(dest => {
         let counter = fares[dest]["startIndex"];
+        delete fares[dest]["startIndex"];
         Object.keys(fares[dest]).forEach(key => {
           if (key !== "startIndex") {
-            fares[dest][key] = row[counter]
-            counter++
+            fares[dest][key] = row[counter];
+            counter++;
           }
-          //todo: delete startIndex
         });
       });
 
@@ -57,11 +57,11 @@ const importStationsAndFares = async ({ system, file }) => {
         effectiveDate: moment(effectiveDate, "MM/DD/YYYY"),
         fares,
         line,
-        station: row[0],
+        station: row[0].split("-").join(" "), // remove dash from station names in source data
         system,
       };
 
-      // if "current" station data alreay exists, change it to "current" false. TODO: incorporate effectiveDate into current logic
+      // TODO: incorporate effectiveDate into current logic
       const existingStation = await Station.findOne({
         line: obj.line,
         system: obj.system,
