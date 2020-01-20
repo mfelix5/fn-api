@@ -43,7 +43,6 @@ const importStationsAndFares = async ({ system, file }) => {
       const fares = {...destinationFareTypes};
       Object.keys(fares).forEach(dest => {
         let counter = fares[dest]["startIndex"];
-        delete fares[dest]["startIndex"];
         Object.keys(fares[dest]).forEach(key => {
           if (key !== "startIndex") {
             fares[dest][key] = row[counter];
