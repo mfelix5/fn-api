@@ -52,7 +52,11 @@ const importStationsAndFares = async ({ system, file }) => {
         });
       });
 
-      Object.keys(fares).forEach(dest => delete fares[dest]["startIndex"]);
+      Object.keys(fares).forEach(dest => {
+        if (fares[dest]["startIndex"]) {
+          delete fares[dest]["startIndex"];
+        }
+      });
 
       const obj = {
         current: true,
@@ -63,16 +67,14 @@ const importStationsAndFares = async ({ system, file }) => {
         system,
       };
 
-      console.log('obj', obj)
-
       // TODO: incorporate effectiveDate into current logic
-      // const existingStation = await Station.findOne({
-      //   line: obj.line,
-      //   system: obj.system,
-      //   station: obj.station,
-      //   current: true,
-      // });
-      // if (existingStation) await Station.findOneAndUpdate({ _id: existingStation._id }, { current: false });
+      const existingStation = await Station.findOne({
+        line: obj.line,
+        system: obj.system,
+        station: obj.station,
+        current: true,
+      });
+      if (existingStation) await Station.findOneAndUpdate({ _id: existingStation._id }, { current: false });
 
       const station = new Station(obj);
       return station.save();
