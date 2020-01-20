@@ -52,12 +52,6 @@ const importStationsAndFares = async ({ system, file }) => {
         });
       });
 
-      Object.keys(fares).forEach(dest => {
-        if (fares[dest]["startIndex"]) {
-          delete fares[dest]["startIndex"];
-        }
-      });
-
       const obj = {
         current: true,
         effectiveDate: moment(effectiveDate, "MM/DD/YYYY"),
