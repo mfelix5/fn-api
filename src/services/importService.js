@@ -38,7 +38,7 @@ const importStationsAndFares = async ({ system, file }) => {
       fareTypes.forEach(type => destinationFareTypes[dest][type] = null);
     });
 
-    const fareObjects = await Promise.all(stationsAndFares.map(async (row) => {
+    const fareObjectPromises = stationsAndFares.map(async (row) => {
 
       const fares = {...destinationFareTypes};
       Object.keys(fares).forEach(dest => {
@@ -61,17 +61,19 @@ const importStationsAndFares = async ({ system, file }) => {
       };
 
       // TODO: incorporate effectiveDate into current logic
-      const existingStation = await Station.findOne({
-        line: obj.line,
-        system: obj.system,
-        station: obj.station,
-        current: true,
-      });
-      if (existingStation) await Station.findOneAndUpdate({ _id: existingStation._id }, { current: false });
+      // const existingStation = await Station.findOne({
+      //   line: obj.line,
+      //   system: obj.system,
+      //   station: obj.station,
+      //   current: true,
+      // });
+      // if (existingStation) await Station.findOneAndUpdate({ _id: existingStation._id }, { current: false });
 
       const station = new Station(obj);
       return station.save();
-    }));
+    });
+
+    const fareObjects = await Promise.all(fareObjectPromises);
 
     return fareObjects;
   } catch (error) {
