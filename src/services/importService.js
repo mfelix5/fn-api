@@ -40,7 +40,8 @@ const importStationsAndFares = async ({ system, file }) => {
 
     const fareObjectPromises = stationsAndFares.map(async (row) => {
 
-      const fares = {...destinationFareTypes};
+      const fares = { ...destinationFareTypes };
+
       Object.keys(fares).forEach(dest => {
         let counter = fares[dest]["startIndex"];
         Object.keys(fares[dest]).forEach(key => {
@@ -51,6 +52,8 @@ const importStationsAndFares = async ({ system, file }) => {
         });
       });
 
+      Object.keys(fares).forEach(dest => delete fares[dest]["startIndex"]);
+
       const obj = {
         current: true,
         effectiveDate: moment(effectiveDate, "MM/DD/YYYY"),
@@ -59,6 +62,8 @@ const importStationsAndFares = async ({ system, file }) => {
         station: row[0].split("-").join(" "), // remove dash from station names in source data
         system,
       };
+
+      console.log('obj', obj)
 
       // TODO: incorporate effectiveDate into current logic
       // const existingStation = await Station.findOne({
