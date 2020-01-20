@@ -8,15 +8,9 @@ const router = new express.Router();
 
 router.post('/import', upload.single('file'), async (req, res) => {
   try {
-    const { effectiveDate, line, system } = req.query;
+    const { system } = req.query;
     const file = _.get(req, "file.path");
-
-    const result = await importService.importStationsAndFares({
-      effectiveDate,
-      file,
-      line,
-      system
-    });
+    const result = await importService.importStationsAndFares({ file, system });
 
     if (result instanceof Error) {
       res.status(400).send(`Error: ${result.message}`);
