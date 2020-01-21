@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 require('dotenv').config();
 
-mongoose.connect(process.env.MONGO_URI, {
+const URI = process.env.NODE_ENV === "production" ? process.env.MONGO_URI_PROD : process.env.MONGO_URI_TEST;
+
+mongoose.connect(URI, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useUnifiedTopology: true,

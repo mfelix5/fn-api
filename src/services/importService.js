@@ -54,6 +54,8 @@ const importStationsAndFares = async ({ system, file }) => {
         delete myFares[dest]["startIndex"]
       });
 
+      //TODO: address "..." fares
+      
       const obj = {
         current: true,
         effectiveDate: moment(effectiveDate, "MM/DD/YYYY"),
