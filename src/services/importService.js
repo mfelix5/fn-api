@@ -19,8 +19,10 @@ const readCSV = (file) => new Promise((resolve, reject) => {
 });
 
 const importStationsAndFares = async ({ system, file }) => {
+  //TODO: Break this function apart so it's testable
   try {
     if (!system || !file) { throw new Error(`'system' and 'file' are required.`) }
+    if (system !== "NJT") { throw new Error(`NJT is currently the only system supported`)}
 
     const data = await readCSV(file);
     const line = data[0][1];
@@ -41,25 +43,24 @@ const importStationsAndFares = async ({ system, file }) => {
 
     const fareObjectPromises = stationsAndFares.map(async (row) => {
 
-      const myFares = _.cloneDeep(destinationFareTypes);
+      const fares = _.cloneDeep(destinationFareTypes);
 
-      Object.keys(myFares).forEach(dest => {
-        let counter = myFares[dest]["startIndex"];
-        Object.keys(myFares[dest]).forEach(key => {
+      Object.keys(fares).forEach(dest => {
+        let counter = fares[dest]["startIndex"];
+        Object.keys(fares[dest]).forEach(key => {
           if (key !== "startIndex") {
-            myFares[dest][key] = row[counter];
+            fares[dest][key] = row[counter];
             counter++;
           }
         });
-        delete myFares[dest]["startIndex"]
+        delete fares[dest]["startIndex"]
       });
 
       //TODO: address "..." fares
-      
       const obj = {
         current: true,
         effectiveDate: moment(effectiveDate, "MM/DD/YYYY"),
-        fares: myFares,
+        fares,
         line,
         station: row[0].split("-").join(" "),
         system,
@@ -82,7 +83,7 @@ const importStationsAndFares = async ({ system, file }) => {
 
     return fareObjects;
   } catch (error) {
-    return error;
+    return `Error from importStationsAndFares: ${error}`;
   }
 };
 
