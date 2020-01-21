@@ -1,5 +1,6 @@
 const fs = require("fs");
 const csv = require("fast-csv");
+const _ = require("lodash");
 const moment = require("moment");
 const Station = require("../models/station");
 
@@ -40,24 +41,25 @@ const importStationsAndFares = async ({ system, file }) => {
 
     const fareObjectPromises = stationsAndFares.map(async (row) => {
 
-      const fares = { ...destinationFareTypes };
+      const myFares = _.cloneDeep(destinationFareTypes);
 
-      Object.keys(fares).forEach(dest => {
-        let counter = fares[dest]["startIndex"];
-        Object.keys(fares[dest]).forEach(key => {
+      Object.keys(myFares).forEach(dest => {
+        let counter = myFares[dest]["startIndex"];
+        Object.keys(myFares[dest]).forEach(key => {
           if (key !== "startIndex") {
-            fares[dest][key] = row[counter];
+            myFares[dest][key] = row[counter];
             counter++;
           }
         });
+        delete myFares[dest]["startIndex"]
       });
 
       const obj = {
         current: true,
         effectiveDate: moment(effectiveDate, "MM/DD/YYYY"),
-        fares,
+        fares: myFares,
         line,
-        station: row[0].split("-").join(" "), // remove dash from station names in source data
+        station: row[0].split("-").join(" "),
         system,
       };
 
@@ -74,7 +76,7 @@ const importStationsAndFares = async ({ system, file }) => {
       return station.save();
     });
 
-    const fareObjects = await Promise.all(fareObjectPromises);
+    const fareObjects = await Promise.all(fareObjectPromises)
 
     return fareObjects;
   } catch (error) {
