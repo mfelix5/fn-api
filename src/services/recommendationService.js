@@ -3,17 +3,17 @@ const stationService = require("../services/stationService");
 
 const getRecommendation = async (travelData) => {
   try {
-    ["origin", "destination", "line", "system", "fareType", "month", "oneWaysNeeded"].forEach((field) => {
+    ["destination", "fareType", "month", "oneWaysNeeded", "stationId"].forEach((field) => {
       if (!travelData[field]) throw new Error(`${field} is required.`);
     });
 
-    const { destination, fareType, line, oneWaysNeeded, onHand, origin, system } = travelData;
-    const station = await stationService.findStation(origin, line, system);
-    const { fares } = station;
+    const { destination, fareType, oneWaysNeeded, onHand, stationId } = travelData;
+    const station = await stationService.findStationById({ _id: stationId });
+    const { destinations } = station;
 
-    if (!station || !fares) throw new Error(`Unable to find station and fares.`);
+    if (!station || !destinations) throw new Error(`Unable to find station and destinations.`);
 
-    const routeFares = fares[destination];
+    const fares = destinations[destination];
 
     const recommendation = {
       purchase: {
@@ -54,9 +54,9 @@ const getRecommendation = async (travelData) => {
     const leastExpensiveCosts = {};
 
     Object.keys(oneWaysNeeded).forEach((week) => {
-      leastExpensiveOptions[(week)] = oneWaysNeeded[(week)] * routeFares["one-way"] < routeFares.weekly ? "oneWays" : "weekly";
-      leastExpensiveCosts[(week)] = oneWaysNeeded[(week)] * routeFares["one-way"] < routeFares.weekly
-        ? oneWaysNeeded[(week)] * routeFares["one-way"] : routeFares.weekly;
+      leastExpensiveOptions[(week)] = oneWaysNeeded[(week)] * fares["one-way"] < fares.weekly ? "oneWays" : "weekly";
+      leastExpensiveCosts[(week)] = oneWaysNeeded[(week)] * fares["one-way"] < fares.weekly
+        ? oneWaysNeeded[(week)] * fares["one-way"] : fares.weekly;
     });
 
     const costOfLeastExpensiveOptions = Object.values(leastExpensiveCosts).reduce((a, b) => 1 * a + 1 * b);
@@ -67,7 +67,7 @@ const getRecommendation = async (travelData) => {
       monthly: 0,
     };
 
-    if (costOfLeastExpensiveOptions < routeFares.monthly) {
+    if (costOfLeastExpensiveOptions < fares.monthly) {
       Object.keys(oneWaysNeeded).forEach((week) => {
         if (leastExpensiveOptions[week] === "oneWays") {
           purchase.oneWay += oneWaysNeeded[week];
@@ -77,7 +77,7 @@ const getRecommendation = async (travelData) => {
           use[week] = "weekly";
         }
       });
-      recommendation.savings = routeFares.monthly - costOfLeastExpensiveOptions;
+      recommendation.savings = fares.monthly - costOfLeastExpensiveOptions;
       recommendation.totalCost = costOfLeastExpensiveOptions;
       recommendation.message = "A combination of one way and weekly tickets is your least expensive option."; // TODO: make message more dynamic/interesting
     } else {
@@ -85,7 +85,7 @@ const getRecommendation = async (travelData) => {
       Object.keys(oneWaysNeeded).forEach((week) => {
         use[week] = "monthly";
       });
-      recommendation.totalCost = routeFares.monthly;
+      recommendation.totalCost = fares.monthly;
       recommendation.message = "A monthly ticket is your least expensive option.";
     }
 

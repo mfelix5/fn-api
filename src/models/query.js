@@ -20,8 +20,6 @@ const QuerySchema = new mongoose.Schema({
     oneWay: { type: Number, default: 0 },
     weekly: { type: Number, default: 0 },
   },
-  origin: { type: String, required: true },
-  system: { type: String, enum: ["NJT", "MTA", "LIRR"], required: true },
   recommendation: {
     type: Object,
     message: { type: String },
@@ -30,6 +28,7 @@ const QuerySchema = new mongoose.Schema({
     savings: { type: String },
     queryId: { type: String, required: true },
   },
+  stationId: { required: true, type: mongoose.Schema.Types.ObjectId },
   userId: { required: true, type: String },
 }, {
   timestamps: true,
