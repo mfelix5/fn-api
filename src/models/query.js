@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const QuerySchema = new mongoose.Schema({
   destination: { type: String, required: true },
   fareType: { type: String, enum: ["senior", "student", "regular", "disability"], default: "regular", required: true },
+  fares: { type: Object, required: true },
   month: { type: Date, required: true },
   oneWaysNeeded: {
     type: Object,

@@ -92,7 +92,7 @@ const getRecommendation = async (travelData) => {
     recommendation.purchase = purchase;
     recommendation.use = use;
 
-    const query = new Query({ origin: station.name, ...travelData, recommendation, });
+    const query = new Query({ origin: station.name, ...travelData, recommendation, fares });
     await query.save();
     return query;
   } catch (error) {
