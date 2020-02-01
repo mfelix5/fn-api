@@ -3,11 +3,21 @@ const stationService = require("../services/stationService");
 
 const router = new express.Router();
 
-router.get("/station", async (req, res) => {
+router.get("/station/:id", async (req, res) => {
   try {
-    const { line, station, system } = req.query;
-    const result = await stationService.findStation(station, line, system);
-    res.send(result);
+    const station = await stationService.findStationById(req.params.id);
+    if (!station) { return res.status(404).send(`Station not found with id ${req.params.id}.`); }
+    res.send(station);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.put("/station/:id", async (req, res) => {
+  try {
+    const station = await stationService.updateStation(req.params.id, req.body);
+    if (!station) { return res.status(404).send(`Station not found with id ${req.params.id}.`); }
+    res.send(station);
   } catch (err) {
     res.status(500).send(err);
   }
@@ -15,7 +25,7 @@ router.get("/station", async (req, res) => {
 
 router.get("/stations", async (req, res) => {
   try {
-    const { line, system } = req.query;
+    const { line, system } = req.body;
     const result = await stationService.findStationsOnLine(line, system);
     res.send(result);
   } catch (err) {
