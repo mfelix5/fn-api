@@ -20,6 +20,8 @@ const QuerySchema = new mongoose.Schema({
     oneWay: { type: Number, default: 0 },
     weekly: { type: Number, default: 0 },
   },
+  origin: { type: String, required: true },
+  originId: { type: mongoose.Schema.Types.ObjectId, required: true },
   recommendation: {
     type: Object,
     message: { type: String },
@@ -28,8 +30,7 @@ const QuerySchema = new mongoose.Schema({
     savings: { type: String },
     queryId: { type: String, required: true },
   },
-  stationId: { required: true, type: mongoose.Schema.Types.ObjectId },
-  userId: { required: true, type: String },
+  userId: { type: String, required: true },
 }, {
   timestamps: true,
 });

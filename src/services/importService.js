@@ -19,7 +19,6 @@ const importStationsAndFares = async ({ system, file }) => {
       processStationData(system, stationAndFareData, row)
     );
     const stations = await Promise.all(stationPromises);
-    console.log("stations", stations);
     return stations;
   } catch (error) {
     return `Error from importStationsAndFares: ${error}`;
@@ -69,7 +68,7 @@ const processStationData = (system, data, row) => {
     effectiveDate: moment(effectiveDate, "MM/DD/YYYY"),
     destinations,
     line,
-    station: row[0].split("-").join(" "),
+    name: row[0].split("-").join(" "),
     system
   });
   return station.save();

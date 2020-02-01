@@ -10,27 +10,27 @@ const findStationById = async (id) => {
   }
 };
 
-const findStationByName = async (station, line, system) => {
+const findStationByName = async (name, line, system) => {
   try {
-    const foundStation = await Station.findOne({ station, line, system });
+    const foundStation = await Station.findOne({ name, line, system });
     return foundStation;
   } catch (err) {
     console.log(`Error from findStationByName(): ${err}`);
   }
 };
 
-const findStationsOnLine = async (lineName, systemName) => {
+const findStationsOnLine = async (line, system) => {
   try {
-    const stations = await Station.find({ line: lineName, system: systemName });
-    return _.sortBy(stations, ["station"]);
+    const stations = await Station.find({ line, system });
+    return _.sortBy(stations, ["name"]);
   } catch (err) {
     console.log(`Error from findStationsOnLine(): ${err}`);
   }
 };
 
-const findLinesInSystem = async (systemName) => {
+const findLinesInSystem = async (system) => {
   try {
-    const stations = await Station.find({ system: systemName });
+    const stations = await Station.find({ system });
     const lines = stations.map((s) => s.line);
     return _.uniq(lines).sort();
   } catch (err) {
