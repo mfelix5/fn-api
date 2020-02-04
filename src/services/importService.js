@@ -1,4 +1,5 @@
-const NJT = require("./importUtils/NJT")
+const LIRR = require("./importUtils/LIRR");
+const NJT = require("./importUtils/NJT");
 
 const importStationsAndFares = async ({ system, file }) => {
   try {
@@ -9,10 +10,9 @@ const importStationsAndFares = async ({ system, file }) => {
     if (!["LIRR", "NJT"].includes(system)) {
       throw new Error(`Transit system is not supported`);
     } else if (system === "LIRR") {
-      console.log("LIRR!");
+      return await LIRR.importFile({ file });
     } else if (system === "NJT") {
-      const result = await NJT.importFile({ file });
-      return result;
+      return await NJT.importFile({ file });
     }
 
   } catch (err) {
@@ -22,4 +22,4 @@ const importStationsAndFares = async ({ system, file }) => {
 
 module.exports = {
   importStationsAndFares
-}
+};
