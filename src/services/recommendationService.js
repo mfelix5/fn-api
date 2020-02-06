@@ -8,7 +8,7 @@ const getRecommendation = async (travelData) => {
     });
 
     const { destination, fareType, oneWaysNeeded, onHand, originId } = travelData;
-    const station = await stationService.findStationById({ _id: originId });
+    const station = await stationService.findStationById(originId);
     if (!station) throw new Error(`Unable to find station.`);
 
     const { destinations } = station;

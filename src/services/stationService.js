@@ -3,7 +3,7 @@ const Station = require("../models/station");
 
 const findStationById = async (id) => {
   try {
-    const station = await Station.findOne({ _id: id });
+    const station = await Station.findById(id);
     return station;
   } catch (err) {
     console.log(`Error from findStationById(): ${err}`);
