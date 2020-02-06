@@ -16,7 +16,7 @@ router.get("/station/:id", async (req, res) => {
 router.put("/station/:id", async (req, res) => {
   try {
     const station = await stationService.updateStation(req.params.id, req.body);
-    if (!station) { return res.status(404).send(`Station not found with id ${req.params.id}.`); }
+    if (!station) { return res.status(404).send(`Station not found with id ${req.params.id}. No update made`); }
     res.send(station);
   } catch (err) {
     res.status(500).send(err);
