@@ -5,8 +5,7 @@ const StationSchema = new mongoose.Schema({
   destinations: { type: Object, required: true },
   effectiveDate: { type: Date, required: true },
   fareZone: { type: String },
-  line: { type: String },
-  lines: { type: Array },
+  lines: { type: Array, required: true },
   name: { type: String, required: true },
   system: { type: String, required: true },
 }, {
