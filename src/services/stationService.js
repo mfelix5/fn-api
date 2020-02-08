@@ -10,6 +10,18 @@ const findStationById = async (id) => {
   }
 };
 
+const findStationByName = async (name) => {
+  try {
+    const station = await Station.findOne({
+      system: "LIRR", // function is currently for use w/ LIRR only. no duplicate station names.
+      name
+    });
+    return station;
+  } catch (err) {
+    console.log(`Error from findStationById(): ${err}`);
+  }
+};
+
 const findStationsOnLine = async (line, system) => {
   try {
     const stations = await Station.find({
@@ -53,6 +65,7 @@ const updateStation = async (id, update) => {
 
 module.exports = {
   findStationById,
+  findStationByName,
   findStationsOnLine,
   findLinesInSystem,
   updateStation

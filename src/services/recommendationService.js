@@ -10,9 +10,16 @@ const getRecommendation = async (travelData) => {
     const { destination, oneWaysNeeded, onHand, originId } = travelData;
     const station = await stationService.findStationById(originId);
     if (!station) throw new Error(`Unable to find station.`);
-
     const { destinations } = station;
-    const fares = destinations[destination];
+
+    let fares;
+    if (station.system === "NJT") {
+      fares = destinations[destination];
+    } else if (station.system === "LIRR") {
+      const destinationStation = await stationService.findStationByName(destination);
+      const destinationFareZone = destinationStation["fareZone"];
+      fares = station.destinations[destinationFareZone];
+    }
 
     const recommendation = {};
     const leastExpensiveOptions = {};
