@@ -17,8 +17,6 @@ const importFile = async ({ file }) => {
   }
 };
 
-// helper functions
-
 const processStationData = (data, row) => {
   const line = data[0][1];
   const effectiveDate = data[1][1];
@@ -43,7 +41,7 @@ const processStationData = (data, row) => {
     current: true,
     effectiveDate: moment(effectiveDate, "MM/DD/YYYY"),
     destinations,
-    line,
+    lines: [line],
     name: row[0].split("-").join(" "),
     system: "NJT"
   });

@@ -10,18 +10,12 @@ const findStationById = async (id) => {
   }
 };
 
-const findStationByName = async (name, line, system) => {
-  try {
-    const foundStation = await Station.findOne({ name, line, system });
-    return foundStation;
-  } catch (err) {
-    console.log(`Error from findStationByName(): ${err}`);
-  }
-};
-
 const findStationsOnLine = async (line, system) => {
   try {
-    const stations = await Station.find({ line, system });
+    const stations = await Station.find({
+      lines: { $in: line },
+      system
+    });
     return _.sortBy(stations, ["name"]);
   } catch (err) {
     console.log(`Error from findStationsOnLine(): ${err}`);
@@ -31,7 +25,12 @@ const findStationsOnLine = async (line, system) => {
 const findLinesInSystem = async (system) => {
   try {
     const stations = await Station.find({ system });
-    const lines = stations.map((s) => s.line);
+    const lines = [];
+    stations.forEach((s) => {
+      s.lines.forEach(l => {
+        lines.push(l);
+      });
+    });
     return _.uniq(lines).sort();
   } catch (err) {
     console.log(`Error from findLinesInSystem(): ${err}`);
@@ -53,7 +52,6 @@ const updateStation = async (id, update) => {
 }
 
 module.exports = {
-  findStationByName,
   findStationById,
   findStationsOnLine,
   findLinesInSystem,
