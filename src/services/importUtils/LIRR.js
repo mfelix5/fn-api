@@ -1,10 +1,10 @@
 const moment = require("moment");
 const Station = require("../../models/station");
-const utils = require("./utils");
+const { normalizeFare, normalizeFareType, readCSV } = require("./utils");
 
 const importFile = async ({ file, effectiveDate }) => {
   try {
-    const data = await utils.readCSV(file);
+    const data = await readCSV(file);
     const destinations = data[0];
     const fareGroups = data.slice(1);
     const fareObjects = createFareObjects(fareGroups, destinations);
@@ -18,11 +18,10 @@ const importFile = async ({ file, effectiveDate }) => {
       const newStation = new Station({
         ...station,
         current: true,
-        effectiveDate: moment(effectiveDate, "MM/DD/YYYY") || moment(),
+        effectiveDate: effectiveDate ? moment(effectiveDate, "MM/DD/YYYY") : moment(),
         system: "LIRR",
         destinations: destinationAndFareObject
       });
-      // console.log('newStation', newStation)
       return newStation.save();
     });
 
@@ -65,26 +64,13 @@ const createFareObjects = (fareGroups, destinations) => {
   return result;
 };
 
-const normalizeFare = fare => {
-  // delete any asterisks and make number
-  return parseFloat(fare.replace("*", "").trim());
-};
-
-const normalizeFareType = fareType => {
-  if (fareType.includes("Sr. Cit/Disabled/M’care")) {
-    return "Discounted One-Way";
-  } else {
-    return fareType;
-  }
-};
-
 module.exports = {
   importFile
 };
 
 // used once to import static station data
 // const importStationData = async ({ file }) => {
-//   const data = await utils.readCSV(file);
+//   const data = await readCSV(file);
 //   const stations = data.slice(1);
 //   const stationObjects = [];
 
