@@ -10,19 +10,29 @@ const getCalendar = (month, year) => {
 
     const firstFriday = firstOfMonth.clone();
     while (firstFriday.day() !== 5) firstFriday.add(1, "day");
+    const secondFriday = firstFriday.clone().add(7, "days");
+    const thirdFriday = firstFriday.clone().add(14, "days");
+    const fourthFriday = firstFriday.clone().add(21, "days");
+    const fifthFriday = firstFriday.clone().add(28, "days");
 
     const calendar = {};
     calendar.week1 = `${firstOfMonth} - ${firstFriday}`;
-    calendar.week2 = `${firstFriday.clone().add(1, "days")} - ${firstFriday.clone().add(7, "days")}`;
-    calendar.week3 = `${firstFriday.clone().add(8, "days")} - ${firstFriday.clone().add(14, "days")}`;
-    calendar.week4 = `${firstFriday.clone().add(15, "days")} - ${firstFriday.clone().add(21, "days")}`;
+    calendar.week2 = `${firstFriday.clone().add(1, "days")} - ${secondFriday}`;
+    calendar.week3 = `${firstFriday.clone().add(8, "days")} - ${thirdFriday}`;
+    calendar.week4 = `${firstFriday.clone().add(15, "days")} - ${fourthFriday}`;
 
-    if (firstFriday.clone().add(28, "days") <= lastOfMonth) {
-      calendar.week5 = `${firstFriday.clone().add(22, "days")} - ${firstFriday.clone().add(28, "days")}`;
+    if (fourthFriday < lastOfMonth) {
+      const firstOfWeek = firstFriday.clone().add(22, "days")
+      if (lastOfMonth < fifthFriday) {
+        calendar.week5 = `${firstOfWeek} - ${lastOfMonth}`;
+      } else {
+        calendar.week5 = `${firstOfWeek} - ${fifthFriday}`;
+      }
     }
 
-    if (firstFriday.clone().add(29, "days") <= lastOfMonth) {
-      calendar.week6 = `${firstFriday.clone().add(29, "days")} - ${lastOfMonth}`;
+    if (fifthFriday < lastOfMonth) {
+      const firstOfWeek = firstFriday.clone().add(29, "days")
+      calendar.week6 = `${firstOfWeek} - ${lastOfMonth}`;
     }
 
     return calendar;
