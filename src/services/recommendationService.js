@@ -90,15 +90,21 @@ const getRecommendation = async (travelData) => {
 
     recommendation.purchase = purchase;
     recommendation.use = use;
-
-    const query = new Query({ origin: station.name, ...travelData, recommendation, fares });
-    await query.save();
-    return query;
+    const queryObj = { origin: station.name, ...travelData, recommendation, fares };
+    const result = await module.exports.saveQuery(queryObj); // Calling saveQuery via module.exports so that testing stub works correctly. There must be a better way.
+    return result;
   } catch (error) {
     return error;
   }
 };
 
+const saveQuery = async (queryObj) => {
+  const query = new Query(queryObj);
+  const res = await query.save();
+  return res;
+}
+
 module.exports = {
   getRecommendation,
+  saveQuery
 };
