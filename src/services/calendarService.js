@@ -1,8 +1,11 @@
 const moment = require('moment');
 
-const getCalendar = (month, year) => {
+const getCalendar = (date) => {
   try {
-    if (!month || !year) throw new Error(`'month' and 'year' are required.`);
+    if (!date) throw new Error(`'date' is required.`);
+
+    const month = moment(date).format("MMMM");
+    const year = moment(date).format("YYYY");
 
     const monthIndex = moment().month(month).format("M") - 1;
     const firstOfMonth = moment([year, monthIndex]).utc();

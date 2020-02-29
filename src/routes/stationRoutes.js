@@ -23,7 +23,7 @@ router.put("/station/:id", async (req, res) => {
   }
 });
 
-router.get("/stations", async (req, res) => {
+router.post("/stations", async (req, res) => {
   try {
     const { line, system } = req.body;
     const result = await stationService.findStationsOnLine(line, system);

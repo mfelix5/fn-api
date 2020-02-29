@@ -5,8 +5,8 @@ const router = new express.Router();
 
 router.get("/calendar", async (req, res) => {
   try {
-    const { month, year } = req.query;
-    const result = getCalendar(month, year);
+    const { date } = req.query;
+    const result = getCalendar(date);
     if (result instanceof Error) {
       res.status(400).send(`Error: ${result.message}`);
     } else {
