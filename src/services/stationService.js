@@ -34,6 +34,15 @@ const findStationsOnLine = async (line, system) => {
   }
 };
 
+const findStationsInSystem = async (system) => {
+  try {
+    const stations = await Station.find({ system });
+    return _.sortBy(stations, ["name"]);
+  } catch (err) {
+    console.log(`Error from findStationsOnLine(): ${err}`);
+  }
+};
+
 const findLinesInSystem = async (system) => {
   try {
     const stations = await Station.find({ system });
@@ -66,6 +75,7 @@ const updateStation = async (id, update) => {
 module.exports = {
   findStationById,
   findStationByName,
+  findStationsInSystem,
   findStationsOnLine,
   findLinesInSystem,
   updateStation

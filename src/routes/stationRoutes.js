@@ -33,6 +33,17 @@ router.post("/stations", async (req, res) => {
   }
 });
 
+router.get("/stations", async (req, res) => {
+  try {
+    const { system } = req.query;
+    const stations = await stationService.findStationsInSystem(system);
+    if (!stations) { return res.status(404).send(`Stations not found.`); }
+    res.send(stations);
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
 router.get("/lines", async (req, res) => {
   try {
     const { system } = req.query;
