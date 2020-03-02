@@ -16,7 +16,7 @@ const getRecommendation = async (travelData) => {
     if (station.system === "NJT") {
       fares = destinations[destination];
     } else if (station.system === "LIRR") {
-      fares = await module.exports.getFaresLIRR(destination);
+      fares = await module.exports.getFaresLIRR(station, destination);
     }
 
     const recommendation = {};
@@ -102,7 +102,9 @@ const saveQuery = async (queryObj) => {
   return res;
 }
 
-const getFaresLIRR = async (destination) => {
+const getFaresLIRR = async (station, destination) => {
+  console.log('station', station);
+  console.log('destination', destination);
   const destinationStation = await stationService.findStationByName(destination);
   const destinationFareZone = destinationStation["fareZone"];
   return station.destinations[destinationFareZone];
