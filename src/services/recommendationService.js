@@ -50,10 +50,12 @@ const getRecommendation = async (travelData) => {
     }
 
     Object.keys(oneWaysNeeded).forEach((week) => {
-      leastExpensiveOptions[(week)] = oneWaysNeeded[(week)] * fares["one-way-peak"] < fares["weekly"]
-        ? "oneWays" : "weekly";
-      leastExpensiveCosts[(week)] = oneWaysNeeded[(week)] * fares["one-way-peak"] < fares["weekly"]
-        ? oneWaysNeeded[(week)] * fares["one-way-peak"] : fares["weekly"];
+      if (oneWaysNeeded[week] > 0) {
+        leastExpensiveOptions[(week)] = oneWaysNeeded[(week)] * fares["one-way-peak"] < fares["weekly"]
+          ? "oneWays" : "weekly";
+        leastExpensiveCosts[(week)] = oneWaysNeeded[(week)] * fares["one-way-peak"] < fares["weekly"]
+          ? oneWaysNeeded[(week)] * fares["one-way-peak"] : fares["weekly"];
+      }
     });
 
     const costOfLeastExpensiveOptions = Object.values(leastExpensiveCosts).reduce((a, b) => 1 * a + 1 * b);
@@ -103,8 +105,6 @@ const saveQuery = async (queryObj) => {
 }
 
 const getFaresLIRR = async (station, destination) => {
-  console.log('station', station);
-  console.log('destination', destination);
   const destinationStation = await stationService.findStationByName(destination);
   const destinationFareZone = destinationStation["fareZone"];
   return station.destinations[destinationFareZone];
