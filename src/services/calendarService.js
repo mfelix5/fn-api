@@ -7,6 +7,10 @@ const getCalendar = (date) => {
     const month = moment(date).format("MMMM");
     const year = moment(date).format("YYYY");
 
+    if (!month || !year) {
+      throw new Error("Unable to parse provided date.")
+    }
+
     const monthIndex = moment().month(month).format("M") - 1;
     const firstOfMonth = moment([year, monthIndex]).utc();
     const lastOfMonth = moment(firstOfMonth).endOf('month').utc();
